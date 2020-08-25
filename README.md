@@ -1,2 +1,2 @@
 # sociobank
-A Bank Account REST-application for Socios
+A Springboot REST Bank Account Application for Socios
