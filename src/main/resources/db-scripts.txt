@@ -1,0 +1,50 @@
+
+CREATE TABLE IF NOT EXISTS account (
+  id BIGINT NOT NULL,
+  username VARCHAR(255) NOT NULL,
+  iban VARCHAR(255) NOT NULL,
+  balance NUMERIC(6, 4) NOT NULL,
+  currency VARCHAR(255) NULL DEFAULT NULL,
+  creation_date TIMESTAMP NOT NULL,
+  active BIT(1) NOT NULL,
+  PRIMARY KEY (id));
+
+CREATE TABLE IF NOT EXISTS account_transfer (
+  account_transfer_id BIGINT NOT NULL,
+  account_id BIGINT NOT NULL,
+  amoun NUMERIC(6, 4),
+  transfer_date TIMESTAMP NULL,
+  description VARCHAR(500) NOT NULL,
+  PRIMARY KEY (account_transfer_id, account_id),
+  CONSTRAINT FK_account_transfer_account
+    FOREIGN KEY (account_transfer_id)
+    REFERENCES account (id),
+  CONSTRAINT FK_account_account_transfer
+    FOREIGN KEY (account_id)
+    REFERENCES account (id));
+
+
+postman urls
+
+post http://localhost:8081/transfer
+
+post http://localhost:8081/account (/id   /username/{username}    /iban/{iban})
+
+	
+	
+    {
+
+        "username": "wd",
+        "iban": "iban-4",
+        "balance": 100.00,
+        "currency": "EUR",
+    }
+
+    {
+       
+        "ibanResource": "iban-4",
+        "ibanDestiny": "iban-5",
+        "amount": 10.00,
+        "description": "lunch"
+        
+    }

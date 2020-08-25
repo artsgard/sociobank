@@ -1,0 +1,5 @@
+#accountId accountTransferId amount description transferDate
+iban-1;iban-2;10.00;first;2020-08-21 16:22:06
+iban-2;iban-3;10.00;second;2020-08-21 16:22:06
+iban-4;iban-3;10.00;third;2020-08-21 16:22:06
+iban-5;iban-1;10.00;fourth;2020-08-21 16:22:06

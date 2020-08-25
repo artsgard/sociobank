@@ -1,0 +1,6 @@
+#iban username balance currency creationDate active
+iban-1;wd;100.00;EUR;2020-08-21 16:22:06;true
+iban-2;tc;100.00;GBP;2020-08-21 16:22:06;true
+iban-3;jd;100.00;USD;2020-08-21 16:22:06;false
+iban-4;ah;100.00;EUR;2020-08-21 16:22:06;false
+iban-5;wf;100.00;USD;2020-08-21 16:22:06;false
