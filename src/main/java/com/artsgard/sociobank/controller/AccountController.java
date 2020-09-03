@@ -1,13 +1,10 @@
 package com.artsgard.sociobank.controller;
 
 import com.artsgard.sociobank.dto.AccountDTO;
-import com.artsgard.sociobank.exception.ResourceNotFoundException;
 import com.artsgard.sociobank.service.AccountService;
 import com.artsgard.sociobank.service.MapperService;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.validation.Valid;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,41 +48,25 @@ public class AccountController {
     @GetMapping(path = "/{id}", produces = "application/json")
     public ResponseEntity<AccountDTO> findAccountById(@PathVariable Long id) {
        AccountDTO account = accountService.findAccountById(id);
-       if(account != null) {
-           return new ResponseEntity<>(account, HttpStatus.OK);
-       } else {
-           return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-       }
+        return new ResponseEntity<>(account, HttpStatus.OK);
     }
 
     @GetMapping(path = "/iban/{iban}", produces = "application/json")
     public ResponseEntity<?> findAccountByIban(@PathVariable String iban) {
         AccountDTO account = accountService.findAccountByIban(iban);
-       if(account != null) {
-           return new ResponseEntity<>(account, HttpStatus.OK);
-       } else {
-           return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-       }
+        return new ResponseEntity<>(account, HttpStatus.OK);
     }
     
     @GetMapping(path = "/username/{username}", produces = "application/json")
     public ResponseEntity<?> findAccountByUsername(@PathVariable String username) {
         AccountDTO account = accountService.findAccountByUsername(username);
-       if(account != null) {
-           return new ResponseEntity<>(account, HttpStatus.OK);
-       } else {
-           return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-       }
+        return new ResponseEntity<>(account, HttpStatus.OK);
     }
 
     @PostMapping(produces = "application/json", consumes = "application/json")
     public ResponseEntity<?> saveAccount(@Valid @RequestBody AccountDTO accountDTO) {
         AccountDTO account = accountService.saveAccount(accountDTO);
-        if(account != null) {
-           return new ResponseEntity<>(account, HttpStatus.CREATED);
-       } else {
-           return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-       }
+        return new ResponseEntity<>(account, HttpStatus.CREATED);
     }
 
     @PutMapping(produces = "application/json", consumes = "application/json")
@@ -96,12 +77,7 @@ public class AccountController {
 
     @DeleteMapping(path = "/{id}")
     public ResponseEntity<?> deleteAccountById(@PathVariable("id") Long id) {
-        try {
-            accountService.deleteAccountById(id);
-            return new ResponseEntity<>(HttpStatus.OK);
-        } catch (ResourceNotFoundException ex) {
-            Logger.getLogger(AccountController.class.getName()).log(Level.SEVERE, null, ex);
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        accountService.deleteAccountById(id);
+        return new ResponseEntity<>(HttpStatus.OK);  
     }
 }

@@ -2,6 +2,7 @@ package com.artsgard.sociobank.repository;
 
 import com.artsgard.sociobank.model.AccountTransfer;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -23,7 +24,7 @@ public interface AccountTransferRepository extends JpaRepository<AccountTransfer
     
     
     @Query(value = ACCOUNT_TRANSFER_BY_IDS, nativeQuery = true)
-    public AccountTransfer getByAccountIdAndAccountTransferId(@Param("accountId") Long accountId, @Param("accountTransferId") Long accountTransferId);
+    Optional<AccountTransfer> getByAccountIdAndAccountTransferId(@Param("accountId") Long accountId, @Param("accountTransferId") Long accountTransferId);
     
     List<AccountTransfer> findByAccountId(Long accountId);
     

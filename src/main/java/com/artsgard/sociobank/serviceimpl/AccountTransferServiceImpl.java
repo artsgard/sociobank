@@ -2,6 +2,7 @@ package com.artsgard.sociobank.serviceimpl;
 
 import com.artsgard.sociobank.dto.AccountTransferDTO;
 import com.artsgard.sociobank.dto.CurrencyDTO;
+import com.artsgard.sociobank.exception.ResourceNotFoundException;
 import com.artsgard.sociobank.model.Account;
 import com.artsgard.sociobank.model.AccountTransfer;
 import com.artsgard.sociobank.repository.AccountRepository;
@@ -35,57 +36,78 @@ public class AccountTransferServiceImpl implements AccountTransferService {
 
     @Autowired
     private AccountTransferRepository accountTransferRepository;
-    
+
     @Autowired
     ConvertCurrencyExternalService converterService;
 
     @Override
     public List<AccountTransferDTO> findAllAccountTransfers() {
         List<AccountTransferDTO> list = new ArrayList();
-        accountTransferRepository.findAll().forEach(at -> {
-            list.add(map.mapAccountTransferToAccountTransferDTO(at));
-        });
-        return list;
+        List<AccountTransfer> transfers = accountTransferRepository.findAll();
+        if (transfers.isEmpty()) {
+            throw new ResourceNotFoundException("No account transfers present");
+        } else {
+            transfers.forEach(trans -> {
+                list.add(map.mapAccountTransferToAccountTransferDTO(trans));
+            });
+            return list;
+        }
     }
 
     @Override
-    public AccountTransferDTO findAccountTransferByIds(Long accountId, Long accountTransferId) {
-        AccountTransfer tran = accountTransferRepository.getByAccountIdAndAccountTransferId(accountId, accountTransferId);
-        return map.mapAccountTransferToAccountTransferDTO(tran);
+    public AccountTransferDTO findAccountTransferByIds(Long accountId, Long accountTransferId) throws ResourceNotFoundException {
+        Optional<AccountTransfer> tran = accountTransferRepository.getByAccountIdAndAccountTransferId(accountId, accountTransferId);
+        if (tran.isPresent()) {
+            return map.mapAccountTransferToAccountTransferDTO(tran.get());
+        } else {
+            throw new ResourceNotFoundException("No account transfer present with the ids: " + accountId + " / " + accountTransferId);
+        }
     }
 
     @Override
-    public List<AccountTransferDTO> findAccountTransfersByAccountId(Long accountId) {
+    public List<AccountTransferDTO> findAccountTransfersByAccountId(Long accountId) throws ResourceNotFoundException {
         List<AccountTransfer> trans = accountTransferRepository.findByAccountId(accountId);
-        List<AccountTransferDTO> list = new ArrayList();
-        for (AccountTransfer tran : trans) {
-            list.add(map.mapAccountTransferToAccountTransferDTO(tran));
+        if (trans.isEmpty()) {
+            throw new ResourceNotFoundException("No account transfers present with the id: " + accountId);
+        } else {
+            List<AccountTransferDTO> list = new ArrayList();
+            trans.forEach(tran -> {
+                list.add(map.mapAccountTransferToAccountTransferDTO(tran));
+            });
+            return list;
         }
-        return list;
     }
 
     @Override
-    public List<AccountTransferDTO> findAccountTransfersByIban(String iban) {
+    public List<AccountTransferDTO> findAccountTransfersByIban(String iban) throws ResourceNotFoundException {
         List<AccountTransfer> trans = accountTransferRepository.findByIban(iban);
-        List<AccountTransferDTO> list = new ArrayList();
-        for (AccountTransfer tran : trans) {
-            list.add(map.mapAccountTransferToAccountTransferDTO(tran));
+        if (trans.isEmpty()) {
+            throw new ResourceNotFoundException("No account transfers present with iban: " + iban);
+        } else {
+            List<AccountTransferDTO> list = new ArrayList();
+            trans.forEach(tran -> {
+                list.add(map.mapAccountTransferToAccountTransferDTO(tran));
+            });
+            return list;
         }
-        return list;
     }
 
     @Override
-    public List<AccountTransferDTO> findAccountTransfersByUsername(String username) {
+    public List<AccountTransferDTO> findAccountTransfersByUsername(String username) throws ResourceNotFoundException {
         List<AccountTransfer> trans = accountTransferRepository.findByUsername(username);
-        List<AccountTransferDTO> list = new ArrayList();
-        for (AccountTransfer tran : trans) {
-            list.add(map.mapAccountTransferToAccountTransferDTO(tran));
+        if (trans.isEmpty()) {
+            throw new ResourceNotFoundException("No account transfers present with user name: " + username);
+        } else {
+            List<AccountTransferDTO> list = new ArrayList();
+            trans.forEach(tran -> {
+                list.add(map.mapAccountTransferToAccountTransferDTO(tran));
+            });
+            return list;
         }
-        return list;
     }
 
     @Override
-    public AccountTransferDTO saveAccountTransfer(AccountTransferDTO transferDTO) {
+    public AccountTransferDTO saveAccountTransfer(AccountTransferDTO transferDTO) throws ResourceNotFoundException {
         Optional<Account> optAccount1 = accountRepo.findByIban(transferDTO.getIbanResource());
         Optional<Account> optAccount2 = accountRepo.findByIban(transferDTO.getIbanDestiny());
 
@@ -94,16 +116,17 @@ public class AccountTransferServiceImpl implements AccountTransferService {
             Account acc2 = optAccount2.get();
             AccountTransfer tran = new AccountTransfer(acc1.getId(), acc2.getId(), acc1,
                     acc2, transferDTO.getAmount(), transferDTO.getDescription(), new Date());
-            
+
             transactionService(tran);
-            
+
             AccountTransfer transf = accountTransferRepository.save(tran);
             AccountTransferDTO transfDTO = map.mapAccountTransferToAccountTransferDTO(transf);
             transfDTO.setIbanResource(transferDTO.getIbanResource());
             transfDTO.setIbanDestiny(transferDTO.getIbanDestiny());
             return transfDTO;
         } else {
-            return null;
+             throw new ResourceNotFoundException("No account transfer present with the ibans: " 
+                     + optAccount1.get().getIban() + " / " + optAccount2.get().getIban());
         }
     }
 
@@ -130,7 +153,7 @@ public class AccountTransferServiceImpl implements AccountTransferService {
             return getExchangeRate(currency1, currency2);
         }
     }
-    
+
     private BigDecimal getExchangeRate(String currency1, String currency2) {
         CurrencyDTO dto = converterService.getConvertion(currency1, currency2);
         String rate = null;

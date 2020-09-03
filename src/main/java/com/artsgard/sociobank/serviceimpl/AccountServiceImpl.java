@@ -5,7 +5,7 @@ import com.artsgard.sociobank.service.MapperService;
 import com.artsgard.sociobank.exception.ResourceNotFoundException;
 import com.artsgard.sociobank.model.Account;
 import com.artsgard.sociobank.repository.AccountRepository;
-import com.artsgard.sociobank.service.AccountService;;
+import com.artsgard.sociobank.service.AccountService;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -18,59 +18,67 @@ import org.springframework.stereotype.Service;
  *
  * @author WillemDragstra
  */
+
+
 @Service
 public class AccountServiceImpl implements AccountService {
-    
+
     org.slf4j.Logger logger = LoggerFactory.getLogger(AccountServiceImpl.class);
-    
+
     @Autowired
     private AccountRepository repo;
-    
+
     @Autowired
     private MapperService map;
-    
+
     public AccountServiceImpl() {
     }
-    
+
     @Override
-    public List<AccountDTO> findAllAccounts() {
+    public List<AccountDTO> findAllAccounts() throws ResourceNotFoundException {
         List<AccountDTO> list = new ArrayList();
-        repo.findAll().forEach(acc -> {
-            list.add(map.mapAccountToAccountDTO(acc));
-        });
-        return list;
+        List<Account> accounts = repo.findAll();
+        if (accounts.isEmpty()) {
+            throw new ResourceNotFoundException("No accounts present");
+        } else {
+            accounts.forEach(acc -> {
+                list.add(map.mapAccountToAccountDTO(acc));
+            });
+            return list;
+        }
+
     }
-    
+
     @Override
-    public AccountDTO findAccountById(Long id) {
+    public AccountDTO findAccountById(Long id) throws ResourceNotFoundException {
         Optional<Account> optAccount = repo.findById(id);
         if (optAccount.isPresent()) {
             return map.mapAccountToAccountDTO(optAccount.get());
         } else {
-            return null;
-        } 
+            throw new ResourceNotFoundException("No account present with id: " + id);
+        }
     }
-    
+
     @Override
-    public AccountDTO findAccountByUsername(String username) {
+    public AccountDTO findAccountByUsername(String username) throws ResourceNotFoundException {
         Optional<Account> optAccount = repo.findByUsername(username);
         if (optAccount.isPresent()) {
             return map.mapAccountToAccountDTO(optAccount.get());
         } else {
-            return null;
-        } 
+            throw new ResourceNotFoundException("No account present with username: " + username);
+        }
     }
-    
+
     @Override
-    public AccountDTO findAccountByIban(String iban) {
+    public AccountDTO findAccountByIban(String iban) throws ResourceNotFoundException {
         Optional<Account> optAccount = repo.findByIban(iban);
         if (optAccount.isPresent()) {
             return map.mapAccountToAccountDTO(optAccount.get());
         } else {
-            return null;
-        } 
+            throw new ResourceNotFoundException("No account present with iban: " + iban);
+        }
     }
-    
+
     @Override
     public AccountDTO saveAccount(AccountDTO accountDTO) {
         Account account = map.mapAccountDTOToAccount(accountDTO);
@@ -78,41 +86,41 @@ public class AccountServiceImpl implements AccountService {
         account.setActive(Boolean.TRUE);
         return map.mapAccountToAccountDTO(repo.save(account));
     }
-    
+
     @Override
-    public AccountDTO updateAccount(AccountDTO accountDTO) {
-        
+    public AccountDTO updateAccount(AccountDTO accountDTO) throws ResourceNotFoundException {
+
         Optional<Account> optAccount = repo.findById(accountDTO.getId());
         if (optAccount.isPresent()) {
             Account account = optAccount.get();
-            
+
             if (accountDTO.getUsername() == null) {
                 accountDTO.setUsername(account.getUsername());
             }
-            
+
             if (accountDTO.getIban() == null) {
                 accountDTO.setIban(account.getIban());
             }
-            
+
             if (accountDTO.getBalance() == null) {
                 accountDTO.setBalance(account.getBalance());
             }
-            
+
             if (accountDTO.getCurrency() == null) {
                 accountDTO.setCurrency(account.getCurrency());
             }
             accountDTO.setCreationDate(account.getCreationDate());
-            
+
             account = repo.save(map.mapAccountDTOToAccount(accountDTO));
-            
+
             return map.mapAccountToAccountDTO(account);
         } else {
             throw new ResourceNotFoundException("Account not found with id: " + accountDTO.getId());
         }
     }
-    
+
     @Override
-    public void deleteAccountById(Long id) {
+    public void deleteAccountById(Long id) throws ResourceNotFoundException {
         Optional<Account> optAccount = repo.findById(id);
         if (optAccount.isPresent()) {
             repo.delete(optAccount.get());
@@ -120,7 +128,7 @@ public class AccountServiceImpl implements AccountService {
             throw new ResourceNotFoundException("Account not found with id: " + id);
         }
     }
-    
+
     @Override
     public boolean hasAccountById(Long id) {
         Optional<Account> optAccount = repo.findById(id);
@@ -130,7 +138,7 @@ public class AccountServiceImpl implements AccountService {
             return false;
         }
     }
-    
+
     @Override
     public boolean hasAccountByIban(String iban) {
         Optional<Account> optAccount = repo.findByIban(iban);
@@ -140,5 +148,5 @@ public class AccountServiceImpl implements AccountService {
             return false;
         }
     }
-    
+
 }
