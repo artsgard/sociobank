@@ -23,31 +23,9 @@ import org.springframework.web.client.RestTemplate;
  * @author artsgard
  */
 @SpringBootApplication
-public class SocioBankApplication implements CommandLineRunner {
-
-    private static final Logger log = LoggerFactory.getLogger(SocioBankApplication.class);
-
-    private static final SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
-
-    @Autowired
-    private JobLauncher jobLauncher;
-
-    @Autowired
-    @Qualifier("socio-account-job")
-    private Job job;
+public class SocioBankApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(SocioBankApplication.class, args);
-    }
-
-    @Override
-    public void run(String... args) throws Exception {
-        JobParameters jobParameters = new JobParametersBuilder()
-                .addDate("sociobank-date", new Date())
-                .toJobParameters();
-
-        JobExecution execution = jobLauncher.run(job, jobParameters);
-        log.info("execution.getStatus(): " + execution.getStatus());
-        log.info("The time is now {}", dateFormat.format(new Date()));
     }
 }
