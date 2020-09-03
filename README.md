@@ -33,4 +33,13 @@ Testing is still "work in progress"
 
 ## Specific Info SocioBank ====
 
-SocioBank permits banking amung socios. The application contains a small Spring-Batch and a web-REST-banking-application. The batch part initializes some bankaccount data and invokes some banking transactions. The banking part has a few use-cases to create/ update/ delete accounts and to perform some transactions of accounts with different currencies. An external exchange service will provide the api with the current exchange course.
+SocioBank permits banking amung socios. The application contains a small Spring-Batch part and a web-REST-banking-application. The batch part initializes, remotely by a web-service, some bankaccount data and invokes some transactions. The banking part has a few use-cases to create/ update/ delete accounts and to perform some transactions of accounts with different currencies. An external exchange service will provide the api with the current exchange rate.
+
+The Small Batch Part
+
+The Batch does two things, first it persists, by reading a csv-file, into the account table (just reading and writting there is no processor involved). Next, it will perform some transactions, by reading a seccond csv-file, from one existing account to another (the csv files called accounts and transfers you'll find at the root of this project).
+
+
+The Banking REST-service
+
+There are only two entities, account and AccountTransfer. They have a many-to-many relation. 
