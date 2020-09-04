@@ -40,7 +40,7 @@ public class SocioBankApplication implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
-        /*
+
          JobParameters jobParameters = new JobParametersBuilder()
                 .addDate("sociobank-date", new Date())
                 .toJobParameters();
@@ -48,6 +48,6 @@ public class SocioBankApplication implements ApplicationRunner {
         JobExecution execution = jobLauncher.run(job, jobParameters);
         log.info("execution.getStatus(): " + execution.getStatus());
         log.info("The time is now {}", dateFormat.format(new Date()));  
-        */
+
     }
 }

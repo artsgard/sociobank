@@ -1,6 +1,7 @@
 package com.artsgard.sociobank.controller;
 
 import com.artsgard.sociobank.dto.AccountDTO;
+import com.artsgard.sociobank.service.MapperService;
 import com.artsgard.sociobank.serviceimpl.AccountServiceImpl;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -13,6 +14,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.json.AutoConfigureJsonTesters;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -47,6 +49,9 @@ public class AccountControllerSpringStandaloneContextTest {
     
     @Autowired
     private JacksonTester<List<AccountDTO>> jsonAccounts;
+    
+    @Mock
+    private MapperService mapperService;
 
     private AccountDTO account1;
     private AccountDTO account2;
@@ -145,7 +150,7 @@ public class AccountControllerSpringStandaloneContextTest {
                 .getJson())).andReturn().getResponse();
 
         assertThat(response.getStatus()).isEqualTo(HttpStatus.CREATED.value());
-         assertThat(response.getContentAsString()).isEqualTo(
+        assertThat(response.getContentAsString()).isEqualTo(
                 jsonAccount.write(account1).getJson());
     }
 

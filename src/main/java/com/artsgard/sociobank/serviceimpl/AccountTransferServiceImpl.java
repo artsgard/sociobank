@@ -48,17 +48,17 @@ public class AccountTransferServiceImpl implements AccountTransferService {
             throw new ResourceNotFoundException("No account transfers present");
         } else {
             transfers.forEach(trans -> {
-                list.add(map.mapAccountTransferToAccountTransferDTO(trans));
+                list.add(addIban(trans));
             });
             return list;
         }
     }
-    
+
     @Override
     public AccountTransferDTO findAccountTransferById(Long id) throws ResourceNotFoundException {
-        Optional<AccountTransfer> tran = accountTransferRepository.getAccountTransferById(id);
-        if (tran.isPresent()) {
-            return map.mapAccountTransferToAccountTransferDTO(tran.get());
+        Optional<AccountTransfer> trans = accountTransferRepository.getAccountTransferById(id);
+        if (trans.isPresent()) {
+            return addIban(trans.get());
         } else {
             throw new ResourceNotFoundException("No account transfer present with the id: " + id);
         }
@@ -66,9 +66,9 @@ public class AccountTransferServiceImpl implements AccountTransferService {
 
     @Override
     public AccountTransferDTO findAccountTransferByIds(Long accountSourceId, Long accountDestinyId) throws ResourceNotFoundException {
-        Optional<AccountTransfer> tran = accountTransferRepository.getByAccountSourceIdAndAccountDestinyId(accountSourceId, accountDestinyId);
-        if (tran.isPresent()) {
-            return map.mapAccountTransferToAccountTransferDTO(tran.get());
+        Optional<AccountTransfer> trans = accountTransferRepository.getByAccountSourceIdAndAccountDestinyId(accountSourceId, accountDestinyId);
+        if (trans.isPresent()) {
+            return addIban(trans.get());
         } else {
             throw new ResourceNotFoundException("No account transfer present with the ids: " + accountSourceId + " / " + accountDestinyId);
         }
@@ -82,7 +82,7 @@ public class AccountTransferServiceImpl implements AccountTransferService {
         } else {
             List<AccountTransferDTO> list = new ArrayList();
             trans.forEach(tran -> {
-                list.add(map.mapAccountTransferToAccountTransferDTO(tran));
+                list.add(addIban(tran));
             });
             return list;
         }
@@ -96,7 +96,7 @@ public class AccountTransferServiceImpl implements AccountTransferService {
         } else {
             List<AccountTransferDTO> list = new ArrayList();
             trans.forEach(tran -> {
-                list.add(map.mapAccountTransferToAccountTransferDTO(tran));
+                list.add(addIban(tran));
             });
             return list;
         }
@@ -110,7 +110,7 @@ public class AccountTransferServiceImpl implements AccountTransferService {
         } else {
             List<AccountTransferDTO> list = new ArrayList();
             trans.forEach(tran -> {
-                list.add(map.mapAccountTransferToAccountTransferDTO(tran));
+                list.add(addIban(tran));
             });
             return list;
         }
@@ -131,12 +131,12 @@ public class AccountTransferServiceImpl implements AccountTransferService {
 
             AccountTransfer transf = accountTransferRepository.save(tran);
             AccountTransferDTO transfDTO = map.mapAccountTransferToAccountTransferDTO(transf);
-            transfDTO.setIbanResource(transferDTO.getIbanResource());
-            transfDTO.setIbanDestiny(transferDTO.getIbanDestiny());
+            transfDTO.setIbanResource(acc1.getIban());
+            transfDTO.setIbanDestiny(acc2.getIban());
             return transfDTO;
         } else {
-             throw new ResourceNotFoundException("No account transfer present with the ibans: " 
-                     + optAccount1.get().getIban() + " / " + optAccount2.get().getIban());
+            throw new ResourceNotFoundException("No account transfer present with the ibans: "
+                    + optAccount1.get().getIban() + " / " + optAccount2.get().getIban());
         }
     }
 
@@ -171,5 +171,12 @@ public class AccountTransferServiceImpl implements AccountTransferService {
             rate = entry.getValue();
         }
         return new BigDecimal(rate);
+    }
+
+    private AccountTransferDTO addIban(AccountTransfer trans) {
+        AccountTransferDTO transDTO = map.mapAccountTransferToAccountTransferDTO(trans);
+        transDTO.setIbanResource(trans.getAccountSource().getIban());
+        transDTO.setIbanDestiny(trans.getAccountDestiny().getIban());
+        return transDTO;
     }
 }

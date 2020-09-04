@@ -12,14 +12,10 @@ public interface AccountTransferRepository extends JpaRepository<AccountTransfer
              "SELECT * FROM account_transfer WHERE account_source_id=:accountSourceId and account_destiny_id=:accountDestinyId";
     
     static final String ACCOUNT_TRANSFER_BY_IBAN = 
-             "SELECT account_transfer.account_source_id, account_transfer.account_destiny_id, "
-            + "account_transfer.description FROM account_transfer JOIN account "
-            + "ON account_transfer.account_source_id = account.id where  account.iban =:iban";
+       "SELECT * FROM account_transfer JOIN account ON account_transfer.account_source_id = account.id where  account.iban =:iban";
     
     static final String ACCOUNT_TRANSFER_BY_USERNAME = 
-             "SELECT account_transfer.account_source_id, account_transfer.account_destiny_id, "
-            + "account_transfer.description FROM account_transfer JOIN account "
-            + "ON account_transfer.account_source_id = account.id where  account.username =:username";
+       "SELECT * FROM account_transfer JOIN account ON account_transfer.account_source_id = account.id where  account.username =:username";
     
     
     

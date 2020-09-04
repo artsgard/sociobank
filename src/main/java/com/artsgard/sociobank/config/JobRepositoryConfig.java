@@ -13,6 +13,7 @@ import org.springframework.transaction.PlatformTransactionManager;
  *
  * @author artsgard
  */
+
 public class JobRepositoryConfig extends DefaultBatchConfigurer {
     
     @Autowired

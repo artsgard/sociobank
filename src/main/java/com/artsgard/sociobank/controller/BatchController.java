@@ -20,7 +20,8 @@ import org.springframework.web.bind.annotation.RestController;
 /**
  *
  * @author artsgard
- */   
+ */  
+
 @RestController
 @RequestMapping("/startbatch")
 public class BatchController {
