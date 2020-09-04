@@ -2,7 +2,6 @@ package com.artsgard.sociobank.controller;
 
 import com.artsgard.sociobank.dto.AccountDTO;
 import com.artsgard.sociobank.exception.ResourceNotFoundException;
-import com.artsgard.sociobank.service.MapperService;
 import com.artsgard.sociobank.serviceimpl.AccountServiceImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.math.BigDecimal;
@@ -16,7 +15,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.json.AutoConfigureJsonTesters;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -79,11 +77,11 @@ public class AccountControllerServerTest {
         given(accountService.findAllAccounts())
                 .willReturn(accounts);
 
-        ResponseEntity<AccountDTO[]> socioResponse = restTemplate
+        ResponseEntity<AccountDTO[]> response = restTemplate
                 .getForEntity("/account", AccountDTO[].class);
 
-        assertThat(socioResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(socioResponse.getBody().equals(accounts));
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(response.getBody().equals(accounts));
 
     }
 
@@ -91,36 +89,36 @@ public class AccountControllerServerTest {
     public void testFindSocioById() throws Exception {
         given(accountService.findAccountById(1L)).willReturn(account1);
 
-        ResponseEntity<AccountDTO> socioResponse = restTemplate.getForEntity("/account/".concat("1"), AccountDTO.class);
+        ResponseEntity<AccountDTO> response = restTemplate.getForEntity("/account/".concat("1"), AccountDTO.class);
 
-        assertThat(socioResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(socioResponse.getBody().equals(account1));
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(response.getBody().equals(account1));
     }
 
     @Test
     public void testFindAccountByIban() throws Exception {
         given(accountService.findAccountByIban("iban-x")).willReturn(account1);
 
-        ResponseEntity<AccountDTO> socioResponse = restTemplate.getForEntity("/account/iban/".concat("iban-x"), AccountDTO.class);
+        ResponseEntity<AccountDTO> response = restTemplate.getForEntity("/account/iban/".concat("iban-x"), AccountDTO.class);
 
-        assertThat(socioResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(socioResponse.getBody().equals(account1));
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(response.getBody().equals(account1));
     }
     
     @Test
     public void testFindAccountByUsername() throws Exception {
         given(accountService.findAccountByUsername("wd")).willReturn(account1);
 
-        ResponseEntity<AccountDTO> socioResponse = restTemplate.getForEntity("/account/username/".concat("wd"), AccountDTO.class);
+        ResponseEntity<AccountDTO> response = restTemplate.getForEntity("/account/username/".concat("wd"), AccountDTO.class);
 
-        assertThat(socioResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(socioResponse.getBody().equals(account1));
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(response.getBody().equals(account1));
     }
 
     @Test
     public void testSaveAccount() throws Exception {
-        ResponseEntity<AccountDTO> socioResponse = restTemplate.postForEntity("/account", account1, AccountDTO.class);
-        assertThat(socioResponse.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+        ResponseEntity<AccountDTO> response = restTemplate.postForEntity("/account", account1, AccountDTO.class);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
     }
 
     @Test
@@ -132,10 +130,10 @@ public class AccountControllerServerTest {
         headers.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity<String> entity = new HttpEntity<>(jsonAccount.write(account1).getJson(), headers);
         
-        ResponseEntity<String> socioResponse = restTemplate.exchange("/account/", HttpMethod.PUT, entity, String.class);
+        ResponseEntity<String> response = restTemplate.exchange("/account/", HttpMethod.PUT, entity, String.class);
         
-        assertThat(socioResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(socioResponse.getBody().equals(account1));
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(response.getBody().equals(account1));
     }
     
     @Test
@@ -146,10 +144,5 @@ public class AccountControllerServerTest {
             String message = ex.getResponseBodyAsString();
             throw new ResourceNotFoundException(message);
         }
-    }
-    
-    //@Test
-    public void testGetSociosBySortedPage() {
-        
     }
 }

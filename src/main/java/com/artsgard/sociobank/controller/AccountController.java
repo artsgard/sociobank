@@ -36,7 +36,7 @@ public class AccountController {
     private MapperService mapperService;
 
     @GetMapping(produces = "application/json")
-    public ResponseEntity<?> findAllAccounts() {
+    public ResponseEntity<List<AccountDTO>> findAllAccounts() {
         List<AccountDTO> accounts = accountService.findAllAccounts();
         List<AccountDTO> list = new ArrayList();
         accounts.forEach((account) -> {

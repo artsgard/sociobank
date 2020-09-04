@@ -33,7 +33,7 @@ public class AccountTransferController {
     private MapperService mapperService;
 
     @GetMapping(produces = "application/json")
-    public ResponseEntity<?> findAll() {
+    public ResponseEntity<?> findAlltransfers() {
         return new ResponseEntity<>(transferService.findAllAccountTransfers(), HttpStatus.OK);
     }
     

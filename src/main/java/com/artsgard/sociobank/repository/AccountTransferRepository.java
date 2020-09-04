@@ -17,8 +17,6 @@ public interface AccountTransferRepository extends JpaRepository<AccountTransfer
     static final String ACCOUNT_TRANSFER_BY_USERNAME = 
        "SELECT * FROM account_transfer JOIN account ON account_transfer.account_source_id = account.id where  account.username =:username";
     
-    
-    
     Optional<AccountTransfer> getAccountTransferById(Long id);
     
     @Query(value = ACCOUNT_TRANSFER_BY_IDS, nativeQuery = true)

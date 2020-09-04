@@ -50,6 +50,7 @@ public class AccountControllerMockitoTest {
 
     private JacksonTester<AccountDTO> jsonAccount;
     private JacksonTester<List<AccountDTO>> jsonAccounts;
+    
     private AccountDTO account1;
     private AccountDTO account2;
     private AccountDTO account3;
