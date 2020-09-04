@@ -36,7 +36,7 @@ public class AccountController {
     private MapperService mapperService;
 
     @GetMapping(produces = "application/json")
-    public ResponseEntity<?> findAll() {
+    public ResponseEntity<?> findAllAccounts() {
         List<AccountDTO> accounts = accountService.findAllAccounts();
         List<AccountDTO> list = new ArrayList();
         accounts.forEach((account) -> {
@@ -72,7 +72,7 @@ public class AccountController {
     @PutMapping(produces = "application/json", consumes = "application/json")
     public ResponseEntity<?> updateAccount(@Valid @RequestBody AccountDTO accountDTO) {
         accountService.hasAccountById(accountDTO.getId());       
-        return new ResponseEntity<>(accountService.updateAccount(accountDTO), HttpStatus.CREATED);
+        return new ResponseEntity<>(accountService.updateAccount(accountDTO), HttpStatus.OK);
     }
 
     @DeleteMapping(path = "/{id}")
