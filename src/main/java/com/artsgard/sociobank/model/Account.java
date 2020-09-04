@@ -6,6 +6,7 @@ import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -43,11 +44,13 @@ public class Account implements Serializable {
     @Column(name="active", nullable = false)
     private boolean active;
     
-    @JsonIgnore
-    @OneToMany(targetEntity=AccountTransfer.class, mappedBy="account")
-    private List<AccountTransfer> transfers;
+    //@JsonIgnore
+    @OneToMany(mappedBy="accountSource", cascade = CascadeType.REMOVE)
+    private List<AccountTransfer> sourceTransfers;
     
-    @JsonIgnore
-    @OneToMany(targetEntity=AccountTransfer.class, mappedBy="account")
-    private List<AccountTransfer> accountTransfers;
+    //@JsonIgnore
+    @OneToMany(mappedBy="accountDestiny", cascade = CascadeType.REMOVE)
+    private List<AccountTransfer> destinyTransfers;
+
+
 }

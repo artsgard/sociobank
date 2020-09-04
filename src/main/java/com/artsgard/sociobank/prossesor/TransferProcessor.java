@@ -38,7 +38,7 @@ public class TransferProcessor implements ItemProcessor<AccountTransferDTO, Acco
          if (optAccount1.isPresent() && optAccount2.isPresent()) {
             Account acc1 = optAccount1.get();
             Account acc2 = optAccount2.get();
-            AccountTransfer tran = new AccountTransfer(acc1.getId(), acc2.getId(), acc1,
+            AccountTransfer tran = new AccountTransfer(null, acc1,
                     acc2, transferDTO.getAmount(), transferDTO.getDescription(), new Date());
             
             transferService.transactionService(tran);

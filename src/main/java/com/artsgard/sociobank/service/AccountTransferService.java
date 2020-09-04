@@ -13,8 +13,9 @@ import org.springframework.stereotype.Service;
 @Service
 public interface AccountTransferService {
     List<AccountTransferDTO> findAllAccountTransfers() throws ResourceNotFoundException;
+    AccountTransferDTO findAccountTransferById(Long id)  throws ResourceNotFoundException;
     AccountTransferDTO findAccountTransferByIds(Long accountId, Long accountTransferId) throws ResourceNotFoundException;
-    List<AccountTransferDTO> findAccountTransfersByAccountId(Long accountId) throws ResourceNotFoundException;
+    List<AccountTransferDTO> findAccountTransfersByAccountSourceId(Long id) throws ResourceNotFoundException;
     List<AccountTransferDTO> findAccountTransfersByUsername(String username) throws ResourceNotFoundException;
     List<AccountTransferDTO> findAccountTransfersByIban(String iban) throws ResourceNotFoundException;
     AccountTransferDTO saveAccountTransfer(AccountTransferDTO accountDTO) throws ResourceNotFoundException;

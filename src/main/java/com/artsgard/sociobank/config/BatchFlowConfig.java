@@ -2,7 +2,6 @@ package com.artsgard.sociobank.config;
 
 import com.artsgard.sociobank.model.Account;
 import com.artsgard.sociobank.model.AccountTransfer;
-import com.artsgard.sociobank.prossesor.AccountProcessor;
 import com.artsgard.sociobank.prossesor.TransferProcessor;
 import com.artsgard.sociobank.reader.AccountReader;
 import com.artsgard.sociobank.reader.TransferReader;
@@ -40,9 +39,6 @@ public class BatchFlowConfig {
     
     @Autowired
     private JobRepository jobRepository;
-    
-    @Autowired
-    private AccountProcessor accountProcessor;
 
     @Autowired
     private AccountReader accountReader;
@@ -73,7 +69,6 @@ public class BatchFlowConfig {
         return stepBuilders.get("batchAccountStep")
                 .<Account, Account>chunk(20)
                 .reader(accountReader.read())
-                .processor(accountProcessor)
                 .writer(accountWriter)
                 .build();
     }

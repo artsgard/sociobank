@@ -36,10 +36,16 @@ public class AccountTransferController {
     public ResponseEntity<?> findAll() {
         return new ResponseEntity<>(transferService.findAllAccountTransfers(), HttpStatus.OK);
     }
-
+    
     @GetMapping(path = "/{id}", produces = "application/json")
-    public ResponseEntity<?> findTransfersByAccountId(@PathVariable Long id) {
-        List<AccountTransferDTO> transfers = transferService.findAccountTransfersByAccountId(id);
+    public ResponseEntity<?> findTransferById(@PathVariable Long id) {
+        AccountTransferDTO transfer = transferService.findAccountTransferById(id);
+        return new ResponseEntity<>(transfer, HttpStatus.OK);
+    }
+
+    @GetMapping(path = "/accountSourceId/{id}", produces = "application/json")
+    public ResponseEntity<?> findTransfersByAccountSourceId(@PathVariable Long id) {
+        List<AccountTransferDTO> transfers = transferService.findAccountTransfersByAccountSourceId(id);
         return new ResponseEntity<>(transfers, HttpStatus.OK);
     }
     
@@ -55,9 +61,9 @@ public class AccountTransferController {
         return new ResponseEntity<>(transfers, HttpStatus.OK);
     }
     
-    @GetMapping(path = "/{accountId}/{accountTransferId}", produces = "application/json")
-    public ResponseEntity<?> findTransfersByIds(@PathVariable Long accountId, @PathVariable Long accountTransferId) {
-        AccountTransferDTO transfer = transferService.findAccountTransferByIds(accountId, accountTransferId);
+    @GetMapping(path = "/{accountSourceId}/{accountDestinyId}", produces = "application/json")
+    public ResponseEntity<?> findTransfersByIds(@PathVariable Long accountSourceId, @PathVariable Long accountDestinyId) {
+        AccountTransferDTO transfer = transferService.findAccountTransferByIds(accountSourceId, accountDestinyId);
         return new ResponseEntity<>(transfer, HttpStatus.OK);
     }
 

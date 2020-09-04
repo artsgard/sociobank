@@ -12,6 +12,7 @@ import org.springframework.batch.core.JobParametersBuilder;
 import org.springframework.batch.core.launch.JobLauncher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -35,8 +36,8 @@ public class BatchController {
     @Qualifier("socio-account-job")
     private Job job;
 
-    @RequestMapping("/{id}")
-    public String handle(@PathVariable String batchId) throws Exception {
+    @GetMapping(path = "/{batchId}")
+    public String startBatch(@PathVariable String batchId) throws Exception {
          JobParameters jobParameters = new JobParametersBuilder()
                 .addDate("sociobank-date", new Date())
                 .addString(batchId, batchId)
