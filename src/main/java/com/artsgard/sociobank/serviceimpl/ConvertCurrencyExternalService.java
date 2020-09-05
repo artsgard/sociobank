@@ -12,6 +12,8 @@ import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.Proxy;
 import java.net.URL;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
@@ -21,23 +23,18 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class ConvertCurrencyExternalService implements ConverterService {
-    
-    private org.slf4j.Logger logger;
-    public ConvertCurrencyExternalService() {
-         logger = LoggerFactory.getLogger(ConvertCurrencyExternalService.class);
-    }
-    
- private static final String URL_BASE = "https://api.exchangeratesapi.io/latest?base=";
-   
-   private CurrencyDTO dto;
 
-   /**
-    * 
-    * @param baseValue
-    * @param currencyCode
-    * @return 
-    */
-   @Override
+    private org.slf4j.Logger logger;
+
+    public ConvertCurrencyExternalService() {
+        logger = LoggerFactory.getLogger(ConvertCurrencyExternalService.class);
+    }
+
+    private static final String URL_BASE = "https://api.exchangeratesapi.io/latest?base=";
+
+    private CurrencyDTO dto;
+
+    @Override
    public CurrencyDTO getConvertion(String baseValue, String currencyCode) {
         BufferedReader br = null;
         StringBuilder sb;
@@ -79,46 +76,27 @@ public class ConvertCurrencyExternalService implements ConverterService {
         return dto;
     }
 
-   /**
-    * 
-    * @param url
-    * @return
-    * @throws MalformedURLException
-    * @throws IOException 
-    */
-    private HttpURLConnection getConnection(String url) {
-       try {
-           URL serverAddress = new URL(url);
-           
-           Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress("some-proxy", 8080));
-           HttpURLConnection connection;
-           try {
-               connection = (HttpURLConnection) serverAddress.openConnection(); //openConnection(proxy)
-           } catch (IOException ex) {
-               logger.error("<Server IOException: " + ex);
-               return null;
-           }
-           
-           connection.setDoOutput(true);
-           connection.setDoInput(true);
-           try {
-               connection.setRequestMethod("GET");
-           } catch (ProtocolException ex) {
-               logger.error("<Server IOException: " + ex);
-               return null;
-           }
-           connection.setRequestProperty("Accept", "application/json");
-           connection.setReadTimeout(10000);
-           try {
-               connection.connect();
-           } catch (IOException ex) {
-               logger.error("<Server IOException: " + ex);
-               return null;
-           }
-           return connection;
-       } catch (MalformedURLException ex) {
-           logger.error("<Server IOException: " + ex);
-           return null;
-       }
+    public HttpURLConnection getConnection(String urlString) throws MalformedURLException {
+        URL url = new URL(urlString);
+        HttpURLConnection urlConnection = null;
+        urlConnection = create(url);
+        return urlConnection;
     }
+
+    HttpURLConnection create(URL url) {
+        try {
+            return (HttpURLConnection) url.openConnection();
+        } catch (IOException ex) {
+            Logger.getLogger(ConvertCurrencyExternalService.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
+
+    /**
+     *
+     * @param url
+     * @return
+     * @throws MalformedURLException
+     * @throws IOException
+     */
 }

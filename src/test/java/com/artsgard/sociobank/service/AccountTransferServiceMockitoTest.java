@@ -25,7 +25,7 @@ import static org.mockito.Mockito.verify;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
-public class AccountServiceMockitoTest {
+public class AccountTransferServiceMockitoTest {
 
     @Mock
     private AccountRepository repo;

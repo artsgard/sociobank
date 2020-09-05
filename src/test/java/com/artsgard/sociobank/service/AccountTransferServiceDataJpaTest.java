@@ -51,8 +51,6 @@ public class AccountTransferServiceDataJpaTest {
 
     @BeforeEach
     public void setup() {
-
-
         repo.deleteAll();
         transfers = repo.findAll();
         accounts = accountRepo.findAll();
