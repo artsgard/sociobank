@@ -24,7 +24,7 @@ import lombok.ToString;
 public class AccountTransferDTO implements Serializable {
 
     @NotNull
-    private String ibanResource;
+    private String ibanSource;
    
     @NotNull
     private String ibanDestiny;
@@ -33,8 +33,6 @@ public class AccountTransferDTO implements Serializable {
     @DecimalMin(value = "0.0", inclusive = false)
     @Digits(integer=12, fraction=2)
     private BigDecimal amount;
-    
-    private Date transferDate;
- 
     private String description;
+    private Date transferDate;
 }

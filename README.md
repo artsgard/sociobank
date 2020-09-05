@@ -37,7 +37,7 @@ SocioBank permits banking amung socios. The application contains a small Spring-
 
 ### The Small Batch Part
 
-The Batch does two things, first it persists data, by reading a csv-file, into a account table (just reading and writting there is no processor action involved). Next, it will perform some transactions, by reading a seccond csv-file, from one existing account to another (the csv files called accounts.scv and transfers.scv you'll find at the root of this project).
+The Batch does two things, first it persists data, by reading a csv-file, into a account table (just reading and writting there is no processor action involved). Next, it will perform some transactions, by reading a seccond csv-file, from one existing account to another (the csv files called accounts.scv and transfers.scv you'll find at the root of this project). At the next project SocioDbBatch you'll find more about Batches in general and its challenging subject of Batch-Testing.
 
 
 ### The Banking REST-service

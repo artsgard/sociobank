@@ -32,7 +32,7 @@ public class TransferProcessor implements ItemProcessor<AccountTransferDTO, Acco
 
     @Override
     public AccountTransfer process(AccountTransferDTO transferDTO) throws Exception {
-        Optional<Account> optAccount1 = accountRepo.findByIban(transferDTO.getIbanResource());
+        Optional<Account> optAccount1 = accountRepo.findByIban(transferDTO.getIbanSource());
         Optional<Account> optAccount2 = accountRepo.findByIban(transferDTO.getIbanDestiny());
         
          if (optAccount1.isPresent() && optAccount2.isPresent()) {
@@ -44,7 +44,7 @@ public class TransferProcessor implements ItemProcessor<AccountTransferDTO, Acco
             transferService.transactionService(tran);
             return tran;
         } else {
-            throw new ResourceNotFoundException("No accounts found with the ibans: " + transferDTO.getIbanResource() + "  /  " + transferDTO.getIbanDestiny());
+            throw new ResourceNotFoundException("No accounts found with the ibans: " + transferDTO.getIbanSource() + "  /  " + transferDTO.getIbanDestiny());
         }
     }
 }

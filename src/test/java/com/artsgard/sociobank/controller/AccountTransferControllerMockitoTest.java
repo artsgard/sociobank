@@ -55,8 +55,8 @@ public class AccountTransferControllerMockitoTest {
         JacksonTester.initFields(this, new ObjectMapper());
         mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
         Date now =  new Date();
-        transfer1 = new AccountTransferDTO("iban-1", "iban-2", new BigDecimal("23.56"), now, "some first description");
-        transfer2 = new AccountTransferDTO("iban-2", "iban-3", new BigDecimal("73.56"), now, "some second description");
+        transfer1 = new AccountTransferDTO("iban-1", "iban-2", new BigDecimal("23.56"), "some first description", now);
+        transfer2 = new AccountTransferDTO("iban-2", "iban-3", new BigDecimal("73.56"), "some second description", now);
        
         transfers = new ArrayList();
         transfers.add(transfer1);

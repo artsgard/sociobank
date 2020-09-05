@@ -21,10 +21,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * @author artsgard
  */
 @SpringBootApplication
-public class SocioBankApplication implements ApplicationRunner {
+public class SocioBankApplication { //implements ApplicationRunner {
     
     private static final Logger log = LoggerFactory.getLogger(SocioBankApplication.class);
-
+/*
     private static final SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
 
     @Autowired
@@ -33,11 +33,11 @@ public class SocioBankApplication implements ApplicationRunner {
     @Autowired
     @Qualifier("socio-account-job")
     private Job job;
-
+*/
     public static void main(String[] args) {
         SpringApplication.run(SocioBankApplication.class, args);
     }
-
+/*
     @Override
     public void run(ApplicationArguments args) throws Exception {
 
@@ -50,4 +50,5 @@ public class SocioBankApplication implements ApplicationRunner {
         log.info("The time is now {}", dateFormat.format(new Date()));  
 
     }
+*/
 }

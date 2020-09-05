@@ -118,7 +118,7 @@ public class AccountTransferServiceImpl implements AccountTransferService {
 
     @Override
     public AccountTransferDTO saveAccountTransfer(AccountTransferDTO transferDTO) throws ResourceNotFoundException {
-        Optional<Account> optAccount1 = accountRepo.findByIban(transferDTO.getIbanResource());
+        Optional<Account> optAccount1 = accountRepo.findByIban(transferDTO.getIbanSource());
         Optional<Account> optAccount2 = accountRepo.findByIban(transferDTO.getIbanDestiny());
 
         if (optAccount1.isPresent() && optAccount2.isPresent()) {
@@ -131,7 +131,7 @@ public class AccountTransferServiceImpl implements AccountTransferService {
 
             AccountTransfer transf = accountTransferRepository.save(tran);
             AccountTransferDTO transfDTO = map.mapAccountTransferToAccountTransferDTO(transf);
-            transfDTO.setIbanResource(acc1.getIban());
+            transfDTO.setIbanSource(acc1.getIban());
             transfDTO.setIbanDestiny(acc2.getIban());
             return transfDTO;
         } else {
@@ -175,7 +175,7 @@ public class AccountTransferServiceImpl implements AccountTransferService {
 
     private AccountTransferDTO addIban(AccountTransfer trans) {
         AccountTransferDTO transDTO = map.mapAccountTransferToAccountTransferDTO(trans);
-        transDTO.setIbanResource(trans.getAccountSource().getIban());
+        transDTO.setIbanSource(trans.getAccountSource().getIban());
         transDTO.setIbanDestiny(trans.getAccountDestiny().getIban());
         return transDTO;
     }
