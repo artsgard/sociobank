@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
  */  
 
 @RestController
-@RequestMapping("/startbatch")
+@RequestMapping("/load-db")
 public class BatchController {
     
     private static final Logger log = LoggerFactory.getLogger(SocioBankApplication.class);
@@ -37,17 +37,15 @@ public class BatchController {
     @Qualifier("socio-account-job")
     private Job job;
 
-    @GetMapping(path = "/{batchId}")
-    public String startBatch(@PathVariable String batchId) throws Exception {
+    @GetMapping()
+    public String startBatch() throws Exception {
          JobParameters jobParameters = new JobParametersBuilder()
                 .addDate("sociobank-date", new Date())
-                .addString(batchId, batchId)
                 .toJobParameters();
 
         jobLauncher.run(job, jobParameters);
-        //log.info("execution.getStatus(): " + execution.getStatus());
-        log.info("The time is now {}", dateFormat.format(new Date())); 
-        return "userjob started: " + batchId;
+        log.info("Time of the Batcg start", dateFormat.format(new Date())); 
+        return "db load started: " + jobParameters.getString("sociobank-date");
     }
 }
 
