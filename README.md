@@ -42,4 +42,49 @@ The Batch does two things, first it persists data, by reading a csv-file, into a
 
 ### The Banking REST-service
 
-There are only two entities, account and AccountTransfer. They have a many-to-many relation. 
+When starting the main of Springboot's SocioBankApplication the app will initialize the socio_bank_db DB which consists of only teo tables: account and account_transfer. The tables do not contain any data.
+
+### The SocioBank Spring Batch Part
+
+Next you type in your browser-window:
+
+	http://localhost:8082/load-db
+
+and the empty database will be filled with some accounts. Additionally the Batch will preform some transactions. Both data is provided by two csv-files, which you find at the root-folder of the project called:
+
+	accounts.csv
+	#iban username balance currency creationDate active
+	iban-1;wd;80.00;EUR;2020-08-21 16:22:06;true
+	etc.
+	
+	transfers.csv
+	#accountId accountTransferId amount description transferDate
+	iban-1;iban-2;10.00;first;2020-08-21 16:22:06
+	etc.
+	
+As you may see the account has a currency field. The transfer-action calls an external service to convert currency values based on the actual exchange rate.
+
+### The Banking urls
+
+	get http://localhost:8082/account and transfer will list al accounts/ transfers
+	
+	post http://localhost:8082/account
+	
+	{
+        	"username": "al",
+        	"iban": "iban-1234",
+        	"balance": 100.00,
+        	"currency": "EUR"
+    	}
+	
+	put: adding a "id": 7, delete adding a path var: http://localhost:8082/account/7
+	
+	http://localhost:8082/transfer
+	{
+        	"ibanSource": "iban-2",
+        	"ibanDestiny": "iban-3",
+        	"amount": 10.00,
+        	"description": "work luch of friday"
+	}
+Other urls you'll find at both controller classes.
+	
