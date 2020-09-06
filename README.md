@@ -75,9 +75,9 @@ As you may see the account has a currency field. The transfer-action calls an ex
         	"iban": "iban-1234",
         	"balance": 100.00,
         	"currency": "EUR"
-    	}
+	}
 	
-	put: adding a "id": 7, delete adding a path var: http://localhost:8082/account/7
+	put: adding a "id": 7 for updating the table, delete adding a path var: http://localhost:8082/account/7 for deleting a record
 	
 	post http://localhost:8082/transfer
 	{
