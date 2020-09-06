@@ -17,7 +17,10 @@ import java.util.Map;
 import java.util.Optional;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
@@ -39,6 +42,9 @@ public class AccountTransferServiceImpl implements AccountTransferService {
 
     @Autowired
     ConvertCurrencyExternalService converterService;
+    
+    @Qualifier("dbTransactionManager")
+    private PlatformTransactionManager transactionManager;
 
     @Override
     public List<AccountTransferDTO> findAllAccountTransfers() {
@@ -125,8 +131,6 @@ public class AccountTransferServiceImpl implements AccountTransferService {
             Account acc1 = optAccount1.get();
             Account acc2 = optAccount2.get();
             AccountTransfer tran = new AccountTransfer(null, acc1, acc2, transferDTO.getAmount(), transferDTO.getDescription(), new Date());
-            System.out.println("<<<<<<<<<<<<<<<<<<<<<<<<<<source: " + tran.getAccountSource().getId());
-            System.out.println("<<<<<<<<<<<<<<<<<<<<<<<<<<destiny: " + tran.getAccountDestiny().getId());
             transactionService(tran);
 
             AccountTransfer transf = accountTransferRepository.save(tran);
@@ -141,21 +145,23 @@ public class AccountTransferServiceImpl implements AccountTransferService {
     }
 
     @Override
+    @Transactional
     public void transactionService(AccountTransfer transfer) {
         Account acc1 = transfer.getAccountSource();
         Account acc2 = transfer.getAccountDestiny();
         BigDecimal debit = transfer.getAmount();
         BigDecimal convert = convertion(acc1.getCurrency(), acc2.getCurrency());
-        //System.out.println("<<<<<<<<<<<<<<<<<<<<<<<<<<convert: " + convert);
         BigDecimal credit = debit.multiply(convert);
-        //System.out.println("<<<<<<<<<<<<<<<<<<<<<<<<<<credit: " + credit + "   / debit " + debit);
         acc1.setBalance(acc1.getBalance().subtract(debit));
         acc2.setBalance(acc2.getBalance().add(credit));
-        accountRepo.save(acc1);
-        accountRepo.save(acc2);
+        List<Account> list = new ArrayList();
+        list.add(acc1);
+        list.add(acc2);
+        accountRepo.saveAll(list);
     }
 
-    private BigDecimal convertion(String currency1, String currency2) {
+    @Override
+    public BigDecimal convertion(String currency1, String currency2) {
         if (currency1.equals(currency2)) {
             return new BigDecimal("1");
         } else {

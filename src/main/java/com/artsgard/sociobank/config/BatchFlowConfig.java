@@ -33,6 +33,9 @@ public class BatchFlowConfig {
     
     @Autowired
     private JobBuilderFactory jobBuilders;
+    
+    @Autowired
+    AccountStepListener acountListener;
 
     @Autowired
     private StepBuilderFactory stepBuilders;
@@ -67,15 +70,18 @@ public class BatchFlowConfig {
     @Bean
     public Step accountStep() throws Exception {
         return stepBuilders.get("batchAccountStep")
+                .transactionManager(transactionManager)
                 .<Account, Account>chunk(20)
                 .reader(accountReader.read())
                 .writer(accountWriter)
+                .listener(acountListener)
                 .build();
     }
     
     @Bean
     public Step transferStep() throws Exception {
         return stepBuilders.get("batchTransferStep")
+                .transactionManager(transactionManager)
                 .<AccountTransfer, AccountTransfer>chunk(20)
                 .reader(transferReader.read())
                 .processor(transferProcessor)

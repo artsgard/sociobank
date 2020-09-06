@@ -17,6 +17,7 @@ import org.springframework.transaction.PlatformTransactionManager;
 public class JobRepositoryConfig extends DefaultBatchConfigurer {
     
     @Autowired
+    @Qualifier("transactionManager")
     private PlatformTransactionManager transactionManager;
     
     @Autowired
