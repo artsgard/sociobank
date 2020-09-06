@@ -33,24 +33,24 @@ Testing is still "work in progress"
 
 ## Specific Info SocioBank ====
 
-SocioBank permits banking amung socios. The application contains a small Spring-Batch part and a web-REST-banking-application. The batch part initializes, remotely by a web-service, some bankaccount data and invokes some transactions. The banking part has a few use-cases to create/ update/ delete accounts and to perform some transactions of accounts with different currencies. An external exchange service will provide the api with the current exchange rate.
+SocioBank permits banking among socios. The application contains a small Spring-Batch part and a simple web-REST-banking-application. The batch-part initializes, remotely by a web-service, some bankaccount data and invokes some transactions. The banking-part has a few use-cases to create/ update/ delete accounts and to perform some transactions of accounts with different currencies. An external exchange service will provide an api with the current exchange rate.
 
 ### The Small Batch Part
 
-The Batch does two things, first it persists data, by reading a csv-file, into a account table (just reading and writting there is no processor action involved). Next, it will perform some transactions, by reading a seccond csv-file, from one existing account to another (the csv files called accounts.scv and transfers.scv you'll find at the root of this project). At the next project SocioDbBatch you'll find more about Batches in general and its challenging subject of Batch-Testing.
+The Batch does two things, first it persists data, by reading a csv-file, into a account table (just reading and writting there is no processor action involved). Next, it will perform some transactions, by reading a second csv-file, from one existing account to another (these csv files are called accounts.scv and transfers.scv, you'll find them at the root of this project). At the next project SocioDbBatch you'll find more about Batches in general and its challenging subject of Testing.
 
 
 ### The Banking REST-service
 
-When starting the main of Springboot's SocioBankApplication the app will initialize the socio_bank_db DB which consists of only teo tables: account and account_transfer. The tables do not contain any data.
+When starting the main of the Springboot's SocioBankApplication it will initialize the socio_bank_db DB which consists of only two tables: account and account_transfer. The tables do not contain any data yet.
 
 ### The SocioBank Spring Batch Part
 
-Next you type in your browser-window:
+Next you type into your browser-window:
 
 	http://localhost:8082/load-db
 
-and the empty database will be filled with some accounts. Additionally the Batch will preform some transactions. Both data is provided by two csv-files, which you find at the root-folder of the project called:
+and the empty database will be filled with some accounts. Additionally the Batch will preform some transactions. Both data is provided by two csv-files, which you find at the root-folder of the project:
 
 	accounts.csv
 	#iban username balance currency creationDate active
@@ -62,7 +62,7 @@ and the empty database will be filled with some accounts. Additionally the Batch
 	iban-1;iban-2;10.00;first;2020-08-21 16:22:06
 	etc.
 	
-As you may see the account has a currency field. The transfer-action calls an external service to convert currency values based on the actual exchange rate.
+As you may see the account has a currency field. The transfer-action calls an external service to convert currency values based on the current exchange rate.
 
 ### The Banking urls
 
@@ -79,7 +79,7 @@ As you may see the account has a currency field. The transfer-action calls an ex
 	
 	put: adding a "id": 7, delete adding a path var: http://localhost:8082/account/7
 	
-	http://localhost:8082/transfer
+	post http://localhost:8082/transfer
 	{
         	"ibanSource": "iban-2",
         	"ibanDestiny": "iban-3",
