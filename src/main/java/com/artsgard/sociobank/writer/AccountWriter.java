@@ -6,6 +6,7 @@ import org.springframework.batch.item.ItemWriter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import com.artsgard.sociobank.repository.AccountRepository;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
@@ -13,6 +14,7 @@ import com.artsgard.sociobank.repository.AccountRepository;
  */
 
 @Component
+//@Transactional
 public class AccountWriter implements ItemWriter<Account> {
     
     @Autowired

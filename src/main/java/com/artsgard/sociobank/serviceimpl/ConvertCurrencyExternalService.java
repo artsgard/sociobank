@@ -7,10 +7,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.InetSocketAddress;
 import java.net.MalformedURLException;
-import java.net.ProtocolException;
-import java.net.Proxy;
 import java.net.URL;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -35,7 +32,7 @@ public class ConvertCurrencyExternalService implements ConverterService {
     private CurrencyDTO dto;
 
     @Override
-   public CurrencyDTO getConvertion(String baseValue, String currencyCode) {
+    public CurrencyDTO getConvertion(String baseValue, String currencyCode) {
         BufferedReader br = null;
         StringBuilder sb;
 
@@ -49,7 +46,7 @@ public class ConvertCurrencyExternalService implements ConverterService {
             while ((output = br.readLine()) != null) {
                 sb.append(output);
             }
-            
+
             ObjectMapper mapper = new ObjectMapper();
             try {
                 dto = mapper.readValue(sb.toString(), CurrencyDTO.class);
@@ -91,12 +88,4 @@ public class ConvertCurrencyExternalService implements ConverterService {
         }
         return null;
     }
-
-    /**
-     *
-     * @param url
-     * @return
-     * @throws MalformedURLException
-     * @throws IOException
-     */
 }

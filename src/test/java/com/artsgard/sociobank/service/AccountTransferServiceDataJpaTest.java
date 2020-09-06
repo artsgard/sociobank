@@ -162,7 +162,7 @@ public class AccountTransferServiceDataJpaTest {
     }
 
     @Test
-    public void saveAccountTransfer() {
+    public void testSaveAccountTransfer() {
         AccountTransfer trans = new AccountTransfer(null, account1, account2, new BigDecimal("100.00"), "some description", new Date());
         repo.save(trans);
         assertThat(trans.getId()).isNotNull();

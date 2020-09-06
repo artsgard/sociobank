@@ -44,9 +44,10 @@ public class BatchController {
                 .addString(batchId, batchId)
                 .toJobParameters();
 
-        JobExecution execution = jobLauncher.run(job, jobParameters);
-        log.info("execution.getStatus(): " + execution.getStatus());
-        log.info("The time is now {}", dateFormat.format(new Date()));  
+        jobLauncher.run(job, jobParameters);
+        //log.info("execution.getStatus(): " + execution.getStatus());
+        log.info("The time is now {}", dateFormat.format(new Date())); 
         return "userjob started: " + batchId;
     }
 }
+

@@ -1,27 +1,35 @@
 
+CREATE SCHEMA IF NOT EXISTS socio_bank_db;
+use socio_bank2_db;
 CREATE TABLE IF NOT EXISTS account (
-  id BIGINT NOT NULL,
-  username VARCHAR(255) NOT NULL,
-  iban VARCHAR(255) NOT NULL,
-  balance NUMERIC(6, 4) NOT NULL,
-  currency VARCHAR(255) NULL DEFAULT NULL,
-  creation_date TIMESTAMP NOT NULL,
+  id BIGINT NOT NULL AUTO_INCREMENT,
   active BIT(1) NOT NULL,
-  PRIMARY KEY (id));
+  balance DECIMAL(19,2) NOT NULL,
+  creation_date TIMESTAMP NOT NULL,
+  currency VARCHAR(255) NOT NULL,
+  iban VARCHAR(255) NOT NULL,
+  username VARCHAR(255) NOT NULL,
+  PRIMARY KEY (id),
+  UNIQUE INDEX UK_acount_iban (iban ASC),
+  UNIQUE INDEX UK_account_username (username);
+
 
 CREATE TABLE IF NOT EXISTS account_transfer (
-  account_transfer_id BIGINT NOT NULL,
-  account_id BIGINT NOT NULL,
-  amoun NUMERIC(6, 4),
-  transfer_date TIMESTAMP NULL,
-  description VARCHAR(500) NOT NULL,
-  PRIMARY KEY (account_transfer_id, account_id),
-  CONSTRAINT FK_account_transfer_account
-    FOREIGN KEY (account_transfer_id)
-    REFERENCES account (id),
-  CONSTRAINT FK_account_account_transfer
-    FOREIGN KEY (account_id)
-    REFERENCES account (id));
+  id BIGINT NOT NULL AUTO_INCREMENT,
+  amount DECIMAL(19,2) NOT NULL,
+  description VARCHAR(255) NULL,
+  transfer_date TIMESTAMP NOT NULL,
+  account_destiny_id BIGINT NULL,
+  account_source_id BIGINT NULL,
+  PRIMARY KEY (id),
+  INDEX FK_account_destiny_id_account_index (account_destiny_id),
+  INDEX FK_account_source_id_account_index (account_source_id),
+  CONSTRAINT FK_account_destiny_id_account
+    FOREIGN KEY (account_source_id)
+    REFERENCES socio_bank_db.account (id),
+  CONSTRAINT FK_account_source_id_account
+    FOREIGN KEY (account_destiny_id)
+    REFERENCES socio_bank_db.account (id));
 
 
 postman urls

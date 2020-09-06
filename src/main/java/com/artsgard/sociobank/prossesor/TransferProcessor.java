@@ -12,22 +12,27 @@ import com.artsgard.sociobank.repository.AccountTransferRepository;
 import com.artsgard.sociobank.service.AccountTransferService;
 import java.util.Date;
 import java.util.Optional;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Bean;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
  * @author artsgard
  */
 @Component
+//@Transactional
 public class TransferProcessor implements ItemProcessor<AccountTransferDTO, AccountTransfer> {
-
-    @Autowired
-    private AccountTransferRepository transferRepo;
     
     @Autowired
     private AccountRepository accountRepo;
     
     @Autowired
     private AccountTransferService transferService;
+    
+    //@Qualifier("dbTransactionManager")
+    //private PlatformTransactionManager transactionManager;
     
 
     @Override
