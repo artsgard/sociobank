@@ -5,6 +5,7 @@ import com.artsgard.sociobank.model.AccountTransfer;
 import com.artsgard.sociobank.prossesor.TransferProcessor;
 import com.artsgard.sociobank.reader.AccountReader;
 import com.artsgard.sociobank.reader.TransferReader;
+import com.artsgard.sociobank.tasklet.DeleteTablesTasklet;
 import com.artsgard.sociobank.writer.AccountWriter;
 import com.artsgard.sociobank.writer.TransferWriter;
 import org.springframework.batch.core.Job;
@@ -30,6 +31,9 @@ public class BatchFlowConfig {
     @Autowired
     @Qualifier("dbTransactionManager") 
     private PlatformTransactionManager transactionManager;
+    
+    @Autowired
+    DeleteTablesTasklet tasklet;
     
     @Autowired
     private JobBuilderFactory jobBuilders;
@@ -62,14 +66,23 @@ public class BatchFlowConfig {
     public Job accountJob() throws Exception {
         return jobBuilders.get("batchAccountJob")
                 .repository(jobRepository)
-                .start(accountStep())
+                .start(deleteTablesContentStep())
+                .next(accountStep())
                 .next(transferStep())
+                .build();
+    }
+    
+    @Bean
+    public Step deleteTablesContentStep() throws Exception {
+        return stepBuilders.get("delete-tables-tasklet")
+                .tasklet(tasklet)
+                .transactionManager(transactionManager)
                 .build();
     }
 
     @Bean
     public Step accountStep() throws Exception {
-        return stepBuilders.get("batchAccountStep")
+        return stepBuilders.get("batch-account-step")
                 .transactionManager(transactionManager)
                 .<Account, Account>chunk(20)
                 .reader(accountReader.read())
@@ -80,7 +93,7 @@ public class BatchFlowConfig {
     
     @Bean
     public Step transferStep() throws Exception {
-        return stepBuilders.get("batchTransferStep")
+        return stepBuilders.get("batch-transfer-step")
                 .transactionManager(transactionManager)
                 .<AccountTransfer, AccountTransfer>chunk(20)
                 .reader(transferReader.read())
