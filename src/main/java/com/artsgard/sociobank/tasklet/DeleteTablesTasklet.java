@@ -20,7 +20,6 @@ public class DeleteTablesTasklet implements Tasklet {
 
     @Override
     public RepeatStatus execute(StepContribution arg0, ChunkContext arg1) throws Exception {
-        System.out.println("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
         if (!transferRepo.findAll().isEmpty()) {
              transferRepo.deleteAll();
         }
