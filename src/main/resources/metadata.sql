@@ -1,63 +1,3 @@
-
-CREATE SCHEMA IF NOT EXISTS socio_bank_db;
-use socio_bank2_db;
-CREATE TABLE IF NOT EXISTS account (
-  id BIGINT NOT NULL AUTO_INCREMENT,
-  active BIT(1) NOT NULL,
-  balance DECIMAL(19,2) NOT NULL,
-  creation_date TIMESTAMP NOT NULL,
-  currency VARCHAR(255) NOT NULL,
-  iban VARCHAR(255) NOT NULL,
-  username VARCHAR(255) NOT NULL,
-  PRIMARY KEY (id),
-  UNIQUE INDEX UK_acount_iban (iban ASC),
-  UNIQUE INDEX UK_account_username (username);
-
-
-CREATE TABLE IF NOT EXISTS account_transfer (
-  id BIGINT NOT NULL AUTO_INCREMENT,
-  amount DECIMAL(19,2) NOT NULL,
-  description VARCHAR(255) NULL,
-  transfer_date TIMESTAMP NOT NULL,
-  account_destiny_id BIGINT NULL,
-  account_source_id BIGINT NULL,
-  PRIMARY KEY (id),
-  INDEX FK_account_destiny_id_account_index (account_destiny_id),
-  INDEX FK_account_source_id_account_index (account_source_id),
-  CONSTRAINT FK_account_destiny_id_account
-    FOREIGN KEY (account_source_id)
-    REFERENCES socio_bank_db.account (id),
-  CONSTRAINT FK_account_source_id_account
-    FOREIGN KEY (account_destiny_id)
-    REFERENCES socio_bank_db.account (id));
-
-
-postman urls
-
-post http://localhost:8081/transfer
-
-post http://localhost:8081/account (/id   /username/{username}    /iban/{iban})
-
-	
-	
-    {
-
-        "username": "wd",
-        "iban": "iban-4",
-        "balance": 100.00,
-        "currency": "EUR",
-    }
-
-    {
-       
-        "ibanResource": "iban-4",
-        "ibanDestiny": "iban-5",
-        "amount": 10.00,
-        "description": "lunch"
-        
-    }
-
-
 CREATE TABLE BATCH_JOB_INSTANCE  (
 	JOB_INSTANCE_ID BIGINT  NOT NULL PRIMARY KEY ,
 	VERSION BIGINT ,
@@ -137,5 +77,3 @@ CREATE TABLE BATCH_JOB_EXECUTION_CONTEXT  (
 CREATE SEQUENCE BATCH_STEP_EXECUTION_SEQ MAXVALUE 9223372036854775807 NO CYCLE;
 CREATE SEQUENCE BATCH_JOB_EXECUTION_SEQ MAXVALUE 9223372036854775807 NO CYCLE;
 CREATE SEQUENCE BATCH_JOB_SEQ MAXVALUE 9223372036854775807 NO CYCLE;
-
-https://github.com/spring-projects/spring-batch/blob/4.2.2.RELEASE/spring-batch-core/src/main/resources/org/springframework/batch/core/schema-postgresql.sql
